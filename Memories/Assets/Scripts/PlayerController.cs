@@ -1,85 +1,127 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public enum EstadoPersonaje
+{
+    Normal,
+    Transformado
+}
 
 public class PlayerController : MonoBehaviour
-
 {
-    Rigidbody rb;
 
-    [SerializeField]
-    float speed;
 
-    [SerializeField]
-    float rotationSpeed;
+    public float speed; //velocidad del personaje
+    public float jumpForce; //capacidad de salto del personaje
+    public EstadoPersonaje estado; //estado de personaje: monstruo - persona
 
-    [SerializeField]
-    float jumpForce;
+    public GameObject modeloNormal; //modelo del player en estado normal
+    public GameObject modeloTransformado; //modelo del plater en estado transformado
+    public GameObject modeloActual; //modelo actual
+    
+    private Rigidbody rb;
 
-    //public GameObject cube;
+    public int cantJumps;
 
-    void Awake()
-    {
 
-        rb = GetComponent<Rigidbody>();
-
-    }
 
     // Start is called before the first frame update
     void Start()
     {
+        //se inicializan ambos modelos para el player como inexistentes
+        modeloNormal.SetActive(false);
+        modeloTransformado.SetActive(false);
 
+        rb = GetComponent<Rigidbody>(); //rb
+        estado = EstadoPersonaje.Normal; //estadoNormal
+
+
+        //se inicializa al jugador en estado normal con el modelo asignado
+        modeloActual = modeloNormal; // Modelo inicial
+        modeloActual.SetActive(true);
     }
+
     // Update is called once per frame
     void Update()
     {
-
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        if (x != 0 || z != 0)
+        switch(estado)
         {
-
-            Vector3 target = transform.position + new Vector3(x, 0, z);
-
-            transform.LookAt(target);
-
-            rb.velocity = new Vector3(x, 0, z).normalized * speed + Vector3.up * rb.velocity.y;
-
-
-        }
-        else
-        {
-
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-
+            case EstadoPersonaje.Normal:
+                //se ponen todas las caracteristicas y poderes el player en modo normal
+                speed = 10;
+                jumpForce = 5;
+                cantJumps = 2;
+                break;
+            case EstadoPersonaje.Transformado:
+                //se ponen todas las caracteristicas y poderes del player en modo transformado
+                speed = 5;
+                jumpForce = 10;
+                cantJumps = 1;
+                break;
         }
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        //MOVIMIENTO EN X - Z
+        //obtener que boton estoy presionando en mi teclado :P
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        transform.Translate(new Vector3(horizontal, 0, vertical) * Time.deltaTime * speed); //actualiza la posicion.
+
+        //SALTO
+  
+        if (Input.GetButtonDown("Jump"))
         {
-
-
+            cantJumps = cantJumps - 1;
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            
 
         }
+        
 
-        /*   if (Input.GetButtonDown("Fire1")) {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if(estado == EstadoPersonaje.Normal)
+            {
+                CambiarEstado(EstadoPersonaje.Transformado);
+            }
+            else
+            {
+                CambiarEstado(EstadoPersonaje.Normal);
+            }
+        }
+    }
+    
+    private void CambiarModelo()
+    {
+        if (modeloActual != null)
+        {
+            modeloActual.SetActive(false);
+        }
 
-               GameObject go = GameObject.Instantiate(cube, transform.position + transform.forward * 2 , Quaternion.identity, null) as GameObject;
-               go.GetComponent<Rigidbody>().AddForce(transform.forward * 100 + Vector3.up * 100);
+        if (estado == EstadoPersonaje.Normal)
+        {
+            modeloActual = modeloNormal;
+        }
+        else if (estado == EstadoPersonaje.Transformado)
+        {
+            modeloActual = modeloTransformado;
+        }
 
-           }
-
-   */
-
+        if (modeloActual != null)
+        {
+            modeloActual.SetActive(true);
+        }
+    }
+    public void CambiarEstado(EstadoPersonaje estadoP) //cambiar el estado del personaje
+    {
+        estado = estadoP;
+        CambiarModelo();
     }
 
     private bool IsGrounded()
     {
+        // Raycast para detectar si el jugador toca el suelo
 
-        RaycastHit info;
-        return Physics.SphereCast(transform.position, 0.4f, Vector3.down, out info, 0.15f);
-
-
+        return Physics.Raycast(transform.position, Vector3.down, 0.1f);
     }
 }
