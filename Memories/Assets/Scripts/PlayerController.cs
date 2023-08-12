@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
             case EstadoPersonaje.Normal:
                 //se ponen todas las caracteristicas y poderes el player en modo normal
                 speed = 10;
-                jumpForce = 5;
+                jumpForce = 8;
                 cantJumps = 2;
                 break;
             case EstadoPersonaje.Transformado:
@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
         //SALTO
   
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump")  )
         {
             cantJumps = cantJumps - 1;
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
@@ -120,8 +120,10 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        // Raycast para detectar si el jugador toca el suelo
 
-        return Physics.Raycast(transform.position, Vector3.down, 0.1f);
+        RaycastHit info;
+        return Physics.SphereCast(transform.position, 0.4f, Vector3.down, out info, 0.15f);
+
+
     }
 }
