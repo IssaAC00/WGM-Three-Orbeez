@@ -42,7 +42,11 @@ public class ObjectPickup : MonoBehaviour
         {
             NextDialogueLine();
             Debug.Log(inventario.cantObj + "POST DIALOGUE LINE");
-        }       
+        } else if(Input.GetKeyDown(KeyCode.F)) //saltarse la animacion de que las letras aparezcan en pantallla
+        {
+            StopAllCoroutines();
+            dialogueText.text = objetoInfo.dialogueDescripcion[lineIndex];
+        }      
     }
 
     private void StartDialogue()
@@ -51,6 +55,7 @@ public class ObjectPickup : MonoBehaviour
         didDialogueStart = true;
         dialoguePanel.SetActive(true);
         lineIndex = 0;
+        Time.timeScale = 0;
         StartCoroutine(ShowLine());
       
     }
@@ -67,6 +72,7 @@ public class ObjectPickup : MonoBehaviour
         {
             didDialogueStart=false;
             dialoguePanel.SetActive(false);
+            Time.timeScale = 1;
             updateModel();
             IncreaseObj(1);
             Debug.Log(inventario.cantObj);
@@ -80,7 +86,7 @@ public class ObjectPickup : MonoBehaviour
         foreach(char ch in objetoInfo.dialogueDescripcion[lineIndex])
         {
             dialogueText.text += ch;
-            yield return new WaitForSeconds(typingTime);
+            yield return new WaitForSecondsRealtime(typingTime);
         }
 
     }

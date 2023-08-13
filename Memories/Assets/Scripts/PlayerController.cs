@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         }
         
 
-        if (Input.GetKeyDown(KeyCode.F))
+        /*if (Input.GetKeyDown(KeyCode.F))
         {
             if(estado == EstadoPersonaje.Normal)
             {
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
             {
                 CambiarEstado(EstadoPersonaje.Normal);
             }
-        }
+        }*/
     }
     
     private void CambiarModelo()
