@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
 
     public float speed; //velocidad del personaje
     public float jumpForce; //capacidad de salto del personaje
+    public float roationSpeed = 1.0f;
+    public float rotationY;
     bool p_isGrounded;
     public EstadoPersonaje estado; //estado de personaje: monstruo - persona
 
@@ -22,7 +24,7 @@ public class PlayerController : MonoBehaviour
     
     private Rigidbody rb;
 
-    public int cantJumps;
+    
 
     private AudioSource salto;
 
@@ -32,13 +34,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         //se inicializan ambos modelos para el player como inexistentes
         modeloNormal.SetActive(false);
         modeloTransformado.SetActive(false);
 
         rb = GetComponent<Rigidbody>(); //rb
         estado = EstadoPersonaje.Normal; //estadoNormal
-
+        float rotationY = Input.GetAxis("Mouse X");
 
         //se inicializa al jugador en estado normal con el modelo asignado
         modeloActual = modeloNormal; // Modelo inicial
@@ -47,7 +50,8 @@ public class PlayerController : MonoBehaviour
         // sonido de salto
 
         salto = GetComponent<AudioSource>();
-    }
+        
+}
 
     // Update is called once per frame
     void Update()
@@ -58,13 +62,11 @@ public class PlayerController : MonoBehaviour
                 //se ponen todas las caracteristicas y poderes el player en modo normal
                 speed = 10;
                 jumpForce = 6;
-                cantJumps = 2;
                 break;
             case EstadoPersonaje.Transformado:
                 //se ponen todas las caracteristicas y poderes del player en modo transformado
                 speed = 5;
                 jumpForce = 11;
-                cantJumps = 1;
                 break;
         }
 
@@ -74,7 +76,8 @@ public class PlayerController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         transform.Translate(new Vector3(horizontal, 0, vertical) * Time.deltaTime * speed); //actualiza la posicion.
-
+      
+        transform.Rotate(new Vector3(0, rotationY * Time.deltaTime * roationSpeed, 0));
         //SALTO
   
         if (Input.GetButtonDown("Jump") && p_isGrounded == true )
