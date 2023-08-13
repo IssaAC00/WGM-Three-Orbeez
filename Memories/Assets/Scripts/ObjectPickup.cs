@@ -7,6 +7,8 @@ using TMPro;
 public class ObjectPickup : MonoBehaviour
 {
     public ObjetoRecolectable objetoInfo;
+   
+    //DIALOGO
     private bool isPlayerInRange;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TMP_Text dialogueText;
@@ -14,14 +16,25 @@ public class ObjectPickup : MonoBehaviour
     private bool didDialogueStart;
     private int lineIndex;
 
-    private float typingTime = 0.1f;
- 
+    private float typingTime = 0.05f;
+
+
+    //CONTADOR
+    public TMP_Text counterText;
+    public int currentObj;
+
+    private void Start()
+    {
+        currentObj = 0;
+        counterText.text = "Objetos recolectados: " + currentObj.ToString();
+    }
 
     // Update is called once per frame
     private void Update()
     {
         if(isPlayerInRange && Input.GetButtonDown("Fire1") && !didDialogueStart)
         {
+      
             StartDialogue();
 
         } else if(dialogueText.text == objetoInfo.dialogueDescripcion[lineIndex] && Input.GetButtonDown("Fire1"))
@@ -90,8 +103,16 @@ public class ObjectPickup : MonoBehaviour
         {
             Debug.Log("Entra");
             control.CambiarEstado(objetoInfo.estadoCambio);
-        } 
+        }
+        IncreaseObj(1);
         Destroy(gameObject);
         
+    }
+
+    public void IncreaseObj(int v)
+    {
+        currentObj = currentObj + v;
+        counterText.text = "Objetoss Recolectados: " + currentObj.ToString();
+        Debug.Log(currentObj.ToString());
     }
 }
