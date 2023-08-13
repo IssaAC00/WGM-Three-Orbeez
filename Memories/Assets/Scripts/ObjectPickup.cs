@@ -18,6 +18,8 @@ public class ObjectPickup : MonoBehaviour
 
     private float typingTime = 0.05f; //cuanto tarda el dialogo en correr
 
+    private AudioSource pickup;
+
 
     //CONTADOR
     public TMP_Text counterText; //texto del contador
@@ -30,6 +32,11 @@ public class ObjectPickup : MonoBehaviour
         
     }
 
+    private void Start()
+    {
+       // pickup = GetComponent<AudioSource>();
+    }
+
     // Update is called once per frame
     private void Update()
     {
@@ -37,6 +44,7 @@ public class ObjectPickup : MonoBehaviour
         {
             StartDialogue();
             //IncreaseObj(1);
+          
 
         } else if(dialogueText.text == objetoInfo.dialogueDescripcion[lineIndex] && Input.GetButtonDown("Fire1"))
         {
