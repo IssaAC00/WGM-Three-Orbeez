@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     public int cantJumps;
 
+    private AudioSource salto;
+
 
 
 
@@ -41,6 +43,10 @@ public class PlayerController : MonoBehaviour
         //se inicializa al jugador en estado normal con el modelo asignado
         modeloActual = modeloNormal; // Modelo inicial
         modeloActual.SetActive(true);
+
+        // sonido de salto
+
+        salto = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -51,13 +57,13 @@ public class PlayerController : MonoBehaviour
             case EstadoPersonaje.Normal:
                 //se ponen todas las caracteristicas y poderes el player en modo normal
                 speed = 10;
-                jumpForce = 5;
+                jumpForce = 6;
                 cantJumps = 2;
                 break;
             case EstadoPersonaje.Transformado:
                 //se ponen todas las caracteristicas y poderes del player en modo transformado
                 speed = 5;
-                jumpForce = 8;
+                jumpForce = 11;
                 cantJumps = 1;
                 break;
         }
@@ -75,6 +81,7 @@ public class PlayerController : MonoBehaviour
         {
             p_isGrounded = false;
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            salto.Play();
         }
         
 
