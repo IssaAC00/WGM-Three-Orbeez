@@ -123,6 +123,17 @@ public class ObjectPickup : MonoBehaviour
         Debug.Log(inventario.cantObj + "increase entrada");
         inventario.cantObj += v;
         counterText.text = "Objetoss Recolectados: " + inventario.cantObj.ToString();
+        switch (objetoInfo.estadoCambio)
+        {
+            case EstadoPersonaje.Normal:
+                //aumenta 1 en los buenos recuerdos
+                inventario.cantNorm += 1;
+                break;
+            case EstadoPersonaje.Transformado:
+                //aumenta 1 en los malos recuerdos
+                inventario.cantTrans += 1;
+                break;
+        }
         Debug.Log(inventario.cantObj + "increase SALIDA");
     }
 }
