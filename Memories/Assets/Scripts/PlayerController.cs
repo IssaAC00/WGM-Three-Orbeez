@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
     public float speed; //velocidad del personaje
     public float jumpForce; //capacidad de salto del personaje
+    bool p_isGrounded;
     public EstadoPersonaje estado; //estado de personaje: monstruo - persona
 
     public GameObject modeloNormal; //modelo del player en estado normal
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
 
     public int cantJumps;
+
 
 
 
@@ -49,13 +51,13 @@ public class PlayerController : MonoBehaviour
             case EstadoPersonaje.Normal:
                 //se ponen todas las caracteristicas y poderes el player en modo normal
                 speed = 10;
-                jumpForce = 8;
+                jumpForce = 5;
                 cantJumps = 2;
                 break;
             case EstadoPersonaje.Transformado:
                 //se ponen todas las caracteristicas y poderes del player en modo transformado
                 speed = 5;
-                jumpForce = 10;
+                jumpForce = 8;
                 cantJumps = 1;
                 break;
         }
@@ -69,16 +71,14 @@ public class PlayerController : MonoBehaviour
 
         //SALTO
   
-        if (Input.GetButtonDown("Jump")  )
+        if (Input.GetButtonDown("Jump") && p_isGrounded == true )
         {
-            cantJumps = cantJumps - 1;
+            p_isGrounded = false;
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-            
-
         }
         
 
-        if (Input.GetKeyDown(KeyCode.F))
+        /*if (Input.GetKeyDown(KeyCode.F))
         {
             if(estado == EstadoPersonaje.Normal)
             {
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
             {
                 CambiarEstado(EstadoPersonaje.Normal);
             }
-        }
+        }*/
     }
     
     private void CambiarModelo()
@@ -118,12 +118,11 @@ public class PlayerController : MonoBehaviour
         CambiarModelo();
     }
 
-    private bool IsGrounded()
+    private void OnCollisionEnter(Collision other)
     {
-
-        RaycastHit info;
-        return Physics.SphereCast(transform.position, 0.4f, Vector3.down, out info, 0.15f);
-
-
+        if (other.gameObject.CompareTag("Floor"))
+        {
+            p_isGrounded = true;
+        }
     }
 }
