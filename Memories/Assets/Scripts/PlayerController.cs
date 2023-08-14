@@ -73,10 +73,18 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        transform.Translate(new Vector3(horizontal, 0, vertical) * Time.deltaTime * speed); //actualiza la posicion.
+        Vector3 movement = new Vector3(horizontal, 0, vertical) * Time.deltaTime * speed;
+        transform.Translate(movement);
+
+        // Rotación del modelo según la dirección de movimiento
+        if (movement != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movement);
+            modeloActual.transform.rotation = Quaternion.Lerp(modeloActual.transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
 
         //SALTO
-  
+
         if (Input.GetButtonDown("Jump") && p_isGrounded == true )
         {
             p_isGrounded = false;
