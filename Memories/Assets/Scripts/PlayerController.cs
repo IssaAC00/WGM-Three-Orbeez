@@ -74,11 +74,7 @@ public class PlayerController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         Vector3 movement = new Vector3(horizontal, 0, vertical) * Time.deltaTime * speed;
-        // Calcula la posición potencial después del movimiento
-        Vector3 newPosition = transform.position + movement;
-
         transform.Translate(movement);
-    
 
         // Rotación del modelo según la dirección de movimiento
         if (movement != Vector3.zero)
@@ -144,5 +140,4 @@ public class PlayerController : MonoBehaviour
             p_isGrounded = true;
         }
     }
-
 }
